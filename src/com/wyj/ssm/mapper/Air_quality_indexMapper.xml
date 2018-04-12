@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyj.ssm.mapper.Air_quality_indexMapper">
+
+    <resultMap type="Air_quality_index" id="quality_indexResult">
+        <id property="id" column="id"/>
+        <result property="district_id" column="district_id"/>
+        <result property="monitor_time" column="monitor_time"/>
+        <result property="pm10" column="pm10"/>
+        <result property="pm25" column="pm25"/>
+        <result property="monitoring_station" column="monitoring_station"/>
+        <result property="last_modify_time" column="last_modify_time"/>
+
+        <association property="district" javaType="District">
+            <id property="id" column="d_id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+
+
+    <select id="Air_quality_indexfind" resultMap="quality_indexResult"
+            parameterType="map">
+		select
+		 a.*,d.name,d.id as d_id from air_quality_index a
+		inner join district d
+		on(a.district_id=d.id)
+		LIMIT  #{pageNo},#{pageSize}
+	</select>
+
+    <select id="Air_quality_indexCount" resultType="int">
+		select count(*)
+		from air_quality_index
+	</select>
+
+    <select id="Air_quality_indexgetId" resultType="Air_quality_index" parameterType="Air_quality_index">
+		select * from air_quality_index where id=#{id}
+	</select>
+
+    <delete id="delAir_quality_index" parameterType="int">
+		delete from air_quality_index where id=#{id}
+	</delete>
+
+    <insert id="addAir_quality_index" parameterType="Air_quality_index">
+		insert into air_quality_index  
+		values(#{id},#{district_id},#{monitor_time},#{pm10},#{pm25},#{monitoring_station},#{last_modify_time})
+	</insert>
+
+    <update id="updateAir_quality_index" parameterType="Air_quality_index">
+		update  air_quality_index set district_id=#{district_id},monitor_time=#{monitor_time},pm10=#{pm10},pm25=#{pm25},monitoring_station=#{monitoring_station},last_modify_time=#{last_modify_time} where id=#{id}
+	</update>
+
+</mapper>
